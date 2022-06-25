@@ -1,6 +1,6 @@
-const contenedor = require('../class/Contenedor.js')
+import ProductosDaoMongoDb from '../DAOs/Productos/ProductosDaoMongoDb.js'
 
-const Productos = new contenedor()
+const Productos = new ProductosDaoMongoDb()
 
 const ControladorProductos = {
     AllProd: async (req, res) => {
@@ -26,7 +26,7 @@ const ControladorProductos = {
             if (NewProduct.hasOwnProperty("TITLE") && 
                 NewProduct.hasOwnProperty("PRICE") && 
                 NewProduct.hasOwnProperty("THUMBNAIL")){
-                    await Productos.save(NewProduct.TITLE, NewProduct.PRICE, NewProduct.THUMBNAIL);
+                    await Productos.save(NewProduct);
             } else {
                 const error = new Error('El formato no es correcto')
                 error.tipo = 'bad format'
@@ -51,7 +51,7 @@ const ControladorProductos = {
             if (UpdateData.hasOwnProperty("TITLE") && 
                 UpdateData.hasOwnProperty("PRICE") && 
                 UpdateData.hasOwnProperty("THUMBNAIL")){
-                    await Productos.UpdateProd(id, UpdateData.TITLE, UpdateData.PRICE, UpdateData.THUMBNAIL);
+                    await Productos.UpdateProd(id, UpdateData);
             } else {
                 const error = new Error('El formato no es correcto')
                 error.tipo = 'bad format'
@@ -96,7 +96,7 @@ const FunctionsProductCtrl = {
                 NewProduct.TITLE.length > 0 &&
                 NewProduct.PRICE.length > 0 &&
                 NewProduct.THUMBNAIL.length > 0){
-                    await Productos.save(NewProduct.TITLE, NewProduct.PRICE, NewProduct.THUMBNAIL);
+                    await Productos.save(NewProduct);
             } else {
                 const error = new Error('El formato no es correcto')
                 error.tipo = 'bad format'
@@ -116,4 +116,4 @@ const FunctionsProductCtrl = {
     }
 }
 
-module.exports = { ControladorProductos, FunctionsProductCtrl }
+export { ControladorProductos, FunctionsProductCtrl }

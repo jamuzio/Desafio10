@@ -1,7 +1,7 @@
-const { FunctionsProductCtrl } = require('./ControladorProductos')
-const Classmensajes = require('../class/Mensajes.js')
+import { FunctionsProductCtrl } from './ControladorProductos.js'
+import MensajesDaoMongoDb from '../DAOs/Mensajes/MensajesDaoMongoDb.js'
 
-const Mensajes = new Classmensajes()
+const Mensajes = new MensajesDaoMongoDb()
 
 async function eventCnx(socket, io) {
     console.log("Nueva conexion iniciada")
@@ -30,13 +30,16 @@ async function eventoNewPrdo(socket, io, NewProd){
 
 async function eventoMensajeController(socket, io, mensaje) {
     try{
-        await Mensajes.save(mensaje.autor, mensaje.texto)
+        await Mensajes.save(mensaje)
         socket.emit('Msj_res', "")
     }
     catch(error){
         if (error.tipo === 'no autor data'){
-            socket.emit('Msj_res', "Debe ingresar un Email para usar el chat")
-        }else {
+            socket.emit('Msj_res', "Debe ingresar correctamente los datos de autor para usar el chat")
+        }else if (error.tipo === 'no message'){
+            socket.emit('Msj_res', "Debe ingresar un mensaje")
+        }
+        else {
             socket.emit('Msj_res', "Error en servidor, por favor intente nuevamente")
         }
     }
@@ -67,4 +70,4 @@ async function Prod_EmitToAll(io) {
     }
     io.sockets.emit('Products', data)
 }
-module.exports = eventCnx
+export default eventCnx

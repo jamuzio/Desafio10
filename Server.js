@@ -1,10 +1,10 @@
-const express = require('express')
-const routerProductos = require('./Routers/routerProductos')
-const routerWeb = require('./Routers/routerWeb')
-const { engine } = require('express-handlebars')
-const { Server: Socketserver } = require('socket.io')
-const { Server: HttpServer } = require('http')
-const eventCnx = require('./Controllers/socketController.js')
+import express from 'express'
+import routerProductos from './Routers/routerProductos.js'
+import routerWeb from './Routers/routerWeb.js'
+import { engine } from 'express-handlebars'
+import { Server as Socketserver } from 'socket.io'
+import { Server as HttpServer } from 'http'
+import eventCnx from './Controllers/socketController.js'
 
 
 const app = express()
