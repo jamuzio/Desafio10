@@ -28,9 +28,3 @@ io.on('connection', socket => eventCnx(socket, io))
 const server = httpServer.listen(PORT, () => {
     console.log(`Servidor escuchando al puerto ${server.address().port}`)
 })
-
-/* const server = app.listen(PORT, () => {
-    console.log(`Servidor escuchando el puerto: ${server.address().port}`)
-})
-server.on("error", error => console.log(`Error en servidor ${error}`))
-*/

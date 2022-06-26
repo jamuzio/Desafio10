@@ -9,32 +9,33 @@ class Class_Mongo {
         let NewElement
         try{
         if(type === 'Mensajes' ){
-            if(MsjChecker(datos)){
+            if(AuthorChecker(datos)){
+                if(!datos.hasOwnProperty("TEXTO") || datos.TEXTO.length === 0){
+                    const error = new Error('Sin Mensaje')
+                    error.tipo = 'no message'
+                    throw error
+                }
                 NewElement = {
                     AUTHOR:
                         {
-                            ID: datos.EMAIL,
+                            EMAIL: datos.EMAIL,
                             NOMBRE: datos.NOMBRE,
                             APELLIDO: datos.APELLIDO,
                             EDAD: datos.EDAD,
                             ALIAS: datos.ALIAS,
                             AVATAR: datos.AVATAR
                         },
-                    TEXT: datos.MENSAJE
+                    DATE: `${Getdate()}`,
+                    TEXT: datos.TEXTO
                     }
-            } else if(datos.MENSAJE.length = 0){
-                const error = new Error('Sin Mensaje')
-                error.tipo = 'no message'
-                throw error
-            }
-            else{
+            } else{
                 const error = new Error('Datos de Autor erroneos')
                 error.tipo = 'no autor data'
                 throw error
             }
         } else if(type === 'Producto'){
             const Producto = await this.coleccion.find({TITLE: `${datos.TITLE}`}).toArray()
-            if (Producto.length === 0 ){
+            if (Producto.length === 0){
                 NewElement = {
                     ID: `${Date.now()}`,
                     TITLE: datos.TITLE,
@@ -59,6 +60,7 @@ class Class_Mongo {
         }
         catch(error){
             console.log(`No se pudo crear un nuevo ${type}.`)
+            console.log(error)
             throw error
         }
     }
@@ -165,9 +167,22 @@ class Class_Mongo {
 
 export default Class_Mongo
 
-function MsjChecker(datos){
+function Getdate () {
+    const hoy = new Date();
+    const fecha = hoy.getDate() + '-' + ( hoy.getMonth() + 1 ) + '-' + hoy.getFullYear()
+    const hora = hoy.getHours() + ':' + hoy.getMinutes() + ':' + hoy.getSeconds();
+    return fecha + ' ' + hora
+}
+
+function AuthorChecker(datos){
     if( emailRegex.test(datos.EMAIL) &&
-        datos.EMAIL.length > 0 &&
+        datos.hasOwnProperty("EMAIL") &&
+        datos.hasOwnProperty("NOMBRE") &&
+        datos.hasOwnProperty("APELLIDO") &&
+        datos.hasOwnProperty("EDAD") &&
+        datos.hasOwnProperty("ALIAS") &&
+        datos.hasOwnProperty("AVATAR")
+        ) if (datos.hasOwnProperty("EMAIL") &&
         datos.NOMBRE.length > 0 &&
         datos.APELLIDO.length > 0 &&
         datos.EDAD.length > 0 &&
@@ -176,3 +191,5 @@ function MsjChecker(datos){
         ) return true
     else return false
     }
+
+const emailRegex = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;

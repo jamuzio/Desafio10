@@ -1,4 +1,16 @@
+
 const socket = io()
+
+//Definimos esquema de Autores
+const authorSchema = new normalizr.schema.Entity('autores',{},{idAttribute: 'EMAIL'})
+
+// Definimos un esquema de mensaje
+const MessageSchema = new normalizr.schema.Entity('Mesanjes', {
+    AUTHOR: authorSchema
+},{idAttribute: '_id'})
+
+//Declaramos que se va a recibir un Array de Schemas
+const MessagesSchema = [MessageSchema]
 
 ///// control de socket //////
 
@@ -17,8 +29,12 @@ socket.on('NewProd_res', async (Respuesta) => {
 })
 
 socket.on('mensajes', (mensajes) => {
+    const MsjDesNorm = normalizr.denormalize(mensajes.result, MessagesSchema, mensajes.entities)
     console.log(mensajes)
-    mostrarMensajes(mensajes)
+    console.log(MsjDesNorm)
+    let COMPRESION = (JSON.stringify(mensajes).length / JSON.stringify(MsjDesNorm).length)*100
+    COMPRESION = COMPRESION.toFixed(2)
+    mostrarMensajes({MsjDesNorm, COMPRESION})
 })
 
 socket.on('Msj_res', (Respuesta) =>{
@@ -62,9 +78,14 @@ btn_newProd.addEventListener('click', event => {
 
 const btn = document.getElementById('btn_enviar')
 btn.addEventListener('click', event => {
-    const autor = document.getElementById('inputAutor').value
-    const texto = document.getElementById('inputTexto').value
-    socket.emit('mensaje', { autor, texto })
+    const EMAIL = document.getElementById('inputEmail').value
+    const NOMBRE = document.getElementById('inputNombre').value
+    const APELLIDO = document.getElementById('inputApellido').value
+    const EDAD = document.getElementById('inputEdad').value
+    const ALIAS = document.getElementById('inputAlias').value
+    const AVATAR = document.getElementById('inputAvatar').value
+    const TEXTO = document.getElementById('inputTexto').value
+    socket.emit('mensaje', { EMAIL, NOMBRE, APELLIDO, EDAD, ALIAS, AVATAR, TEXTO})
 })
 
 ///// Axuliar HBS ///////
@@ -75,3 +96,4 @@ Handlebars.registerHelper('ifCond', function(v1, v2, options) { //funcion auxili
     }
     return options.inverse(this);
   });
+

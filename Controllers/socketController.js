@@ -1,7 +1,19 @@
 import { FunctionsProductCtrl } from './ControladorProductos.js'
 import MensajesDaoMongoDb from '../DAOs/Mensajes/MensajesDaoMongoDb.js'
+import { normalize, denormalize, schema } from 'normalizr' 
 
 const Mensajes = new MensajesDaoMongoDb()
+
+//Definimos esquema de Autores
+const authorSchema = new schema.Entity('autores',{},{idAttribute: 'EMAIL'})
+
+// Definimos un esquema de mensaje
+const MessageSchema = new schema.Entity('Mesanjes', {
+    AUTHOR: authorSchema
+  },{idAttribute: '_id'})
+
+//Declaramos que se va a recibir un Array de Schemas
+const MessagesSchema = [MessageSchema]
 
 async function eventCnx(socket, io) {
     console.log("Nueva conexion iniciada")
@@ -49,8 +61,8 @@ async function eventoMensajeController(socket, io, mensaje) {
 
 async function Msj_emit(io) {
     const mensajes_all = await Mensajes.getAll()
-    //console.log(mensajes_all)
-    io.sockets.emit('mensajes', {mensajes_all})
+    const mensajesNormalizados = normalize(mensajes_all, MessagesSchema )
+    io.sockets.emit('mensajes', mensajesNormalizados)
 }
 
 async function Prod_Emit(socket) {

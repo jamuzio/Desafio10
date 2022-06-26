@@ -1,5 +1,6 @@
 <ul style="list-style-type:none">
-    {{#each mensajes_all }}
-    <li><a style="color: blue; font-weight: bold">{{this.AUTOR}}:</a><a style= "color: brown">{{{this.DATE}}}:</a><a style="color: green; font-style: italic;">{{this.MENSAJE}}</a></li>
+    <li><a style="color: rgb(255, 136, 0); font-weight: bold">Compresion: {{COMPRESION}}%</a></li>
+    {{#each MsjDesNorm}}
+    <li><a style="color: blue; font-weight: bold">{{this.AUTHOR.EMAIL}}:</a><a style= "color: brown">{{{this.DATE}}}:</a><a style="color: green; font-style: italic;">{{this.TEXT}}</a><img src={{this.AUTHOR.AVATAR}} alt="" border=0 height=40 width=40></li>
     {{/each}}
 </ul>
