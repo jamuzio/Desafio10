@@ -20,5 +20,13 @@
 </body>
 
 <script src="js/Socket.js"></script>
+<script>
+    function delayRedirect(){
+        setInterval(function(){
+            //console.log("Me voy")
+            window.location.href = '/api/session/logout';
+        },2000);
+    }
+</script>
 
 </html>

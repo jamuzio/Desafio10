@@ -1,7 +1,8 @@
 import { MongoClient } from 'mongodb'
+import { MONGOATLAS } from '../Secure/Config.js'
 
 const mongodb = {
-    cnxStr: 'mongodb+srv://root:MongoPWDRoot@cluster0.l053v.mongodb.net/CoderDesafio9?retryWrites=true&w=majority',
+    cnxStr: MONGOATLAS,
     options: {
         useNewUrlParser: true,
         useUnifiedTopology: true,

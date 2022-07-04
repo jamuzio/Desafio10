@@ -1,0 +1,17 @@
+<div class="p-4 mt-1 mb-3 bg-light rounded-3" >
+    <h1 style= "color: rgb(142, 15, 247) " >Login de Usuario</h1>
+    <div class="p-4 mt-1 mb-3 bg-dark rounded-3">
+        <form action= "/api/session/login" method="post">
+            <div class="form-group">
+            <label for="user">Nombre:</label>
+            <input type="text" id="user" class="form-control" name="user" placeholder="Ingrese su nombre" pattern=[A-Z a-z 0-9]{3,20} required>
+            </div>
+            <button class = "btn btn-info mt-3 mb-5"type="submit">Enviar</button>
+        </form>
+        <div id="Status">
+            {{#if badLogin}}
+            <p class="alert alert-warning">Debe ingresar un Nombre!!</p>
+            {{/if}}
+        </div>
+    </div>
+</div>

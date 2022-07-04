@@ -11,6 +11,6 @@ routerProductos.get('/:id', ControladorProductos.ProdByID)
 routerProductos.post('/', ControladorProductos.AddNewProd)
 routerProductos.put('/:id', ControladorProductos.UpdateProd)
 routerProductos.delete('/:id', ControladorProductos.DeleteProdByID)
-
+//routerProductos.delete('/productos-test', ControladorProductos.TestProdDisplay)
 
 export default routerProductos
