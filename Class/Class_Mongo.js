@@ -1,4 +1,5 @@
 import dbDesafio9 from "../DataBase/MongoServer.js"
+import { ObjectId } from "mongodb"
 
 
 class Class_Mongo {
@@ -37,7 +38,6 @@ class Class_Mongo {
             const Producto = await this.coleccion.find({TITLE: `${datos.TITLE}`}).toArray()
             if (Producto.length === 0){
                 NewElement = {
-                    ID: `${Date.now()}`,
                     TITLE: datos.TITLE,
                     PRICE: datos.PRICE,
                     THUMBNAIL: datos.THUMBNAIL
@@ -67,9 +67,10 @@ class Class_Mongo {
     async cleanById(id, type){
         let accion
         let resultado
+        const MongoID = ObjectId(id)
         try{
             if(type === 'Producto'){
-                resultado = await this.coleccion.findOneAndDelete({ID: `${id}`})
+                resultado = await this.coleccion.findOneAndDelete({_id: MongoID})
                 accion = 'borrado'   
             } else {
                 const error = new Error(`Typo ${type} desconocido `)
@@ -107,9 +108,10 @@ class Class_Mongo {
         let hoy = new Date()
         let resultado
         let accion
+        const MongoID = ObjectId(id)
         try{
             if(type === 'Producto'){
-                resultado = await this.coleccion.findOneAndUpdate({ID: `${id}`}, 
+                resultado = await this.coleccion.findOneAndUpdate({_id: MongoID}, 
                     {$set: {
                         TIMESTAMP: `${hoy.toDateString() +' '+ hoy.toLocaleTimeString()}`,
                         NOMBRE: dato.NOMBRE,
@@ -142,9 +144,9 @@ class Class_Mongo {
         }
     }
     async getByID(id){
-        
+        const MongoID = ObjectId(id)
         try{
-            const ElementoBuscado = await this.coleccion.findOne({ID: `${id}`})
+            const ElementoBuscado = await this.coleccion.findOne({_id: MongoID})
             if (!ElementoBuscado) {
                 const error = new Error('No existe el elemento buscado')
                 error.tipo = 'db not found'
