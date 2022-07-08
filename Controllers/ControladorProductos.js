@@ -22,17 +22,18 @@ const ControladorProductos = {
     },
     AddNewProd: async (req, res) => {
         const NewProduct = req.body
+        let ProductAdded
         try {
             if (NewProduct.hasOwnProperty("TITLE") && 
                 NewProduct.hasOwnProperty("PRICE") && 
                 NewProduct.hasOwnProperty("THUMBNAIL")){
-                    await Productos.save(NewProduct);
+                ProductAdded = await Productos.save(NewProduct);
             } else {
                 const error = new Error('El formato no es correcto')
                 error.tipo = 'bad format'
                 throw error
             }
-            res.status(201)
+            res.status(201).json({ProductAdded})
         } catch (error) {
             if (error.tipo === 'bad format'){
                 res.status(406).json({ error: error.message })

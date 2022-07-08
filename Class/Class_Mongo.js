@@ -52,7 +52,8 @@ class Class_Mongo {
             error.tipo = 'unknown type'
             throw error
         }
-        await this.coleccion.insertOne(NewElement)
+        const MongoID =  await this.coleccion.insertOne(NewElement)
+        NewElement.ID = MongoID.insertedId
         console.log(`Nuevo ${type} creado`)
         if( type === 'Producto') {
             return NewElement
