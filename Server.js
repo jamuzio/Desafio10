@@ -7,6 +7,7 @@ import { Server as Socketserver } from 'socket.io'
 import { Server as HttpServer } from 'http'
 import eventCnx from './Controllers/socketController.js'
 import session from './Middleware/Session.js'
+import errorHandler from './Middleware/Error_Handler.js'
 
 
 const app = express()
@@ -31,6 +32,7 @@ app.use('/', routerWeb)
 app.all('*', (req, res) => {
     res.status(404).json({ERROR: `Ruta ${req.url} con el metodo ${req.method} no implementada!`})
 })
+app.use(errorHandler)
 
 io.on('connection', socket => eventCnx(socket, io))
 

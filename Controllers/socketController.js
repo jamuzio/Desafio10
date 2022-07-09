@@ -30,9 +30,9 @@ async function eventoNewPrdo(socket, io, NewProd){
         await Prod_EmitToAll(io)
     }
     catch(error){
-        if (error.tipo === 'bad format'){
+        if (error.tipo === 'MISSING_DATA'){
             socket.emit('NewProd_res', "El Formato no es Correcto")
-        }else if (error.tipo === 'duplicated product'){
+        }else if (error.tipo === 'DUPLICATED_PRODUCT'){
             socket.emit('NewProd_res', "Producto Duplicado")
         }else {
             socket.emit('NewProd_res', "Error desconocido")
@@ -46,9 +46,9 @@ async function eventoMensajeController(socket, io, mensaje) {
         socket.emit('Msj_res', "")
     }
     catch(error){
-        if (error.tipo === 'no autor data'){
+        if (error.tipo === 'MISSING_DATA'){
             socket.emit('Msj_res', "Debe ingresar correctamente los datos de autor para usar el chat")
-        }else if (error.tipo === 'no message'){
+        }else if (error.tipo === 'MISSING_MESSAGE'){
             socket.emit('Msj_res', "Debe ingresar un mensaje")
         }
         else {

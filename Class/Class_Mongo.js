@@ -1,5 +1,6 @@
 import dbDesafio9 from "../DataBase/MongoServer.js"
 import { ObjectId } from "mongodb"
+import crearError from "../Tools/Error_Generator.js"
 
 
 class Class_Mongo {
@@ -9,92 +10,81 @@ class Class_Mongo {
     async save(datos, type){
         let NewElement
         try{
-        if(type === 'Mensajes' ){
-            if(AuthorChecker(datos)){
-                if(!datos.hasOwnProperty("TEXTO") || datos.TEXTO.length === 0){
-                    const error = new Error('Sin Mensaje')
-                    error.tipo = 'no message'
-                    throw error
-                }
-                NewElement = {
-                    AUTHOR:
-                        {
-                            EMAIL: datos.EMAIL,
-                            NOMBRE: datos.NOMBRE,
-                            APELLIDO: datos.APELLIDO,
-                            EDAD: datos.EDAD,
-                            ALIAS: datos.ALIAS,
-                            AVATAR: datos.AVATAR
-                        },
-                    DATE: `${Getdate()}`,
-                    TEXT: datos.TEXTO
+            if(type === 'Mensajes' ){
+                if(AuthorChecker(datos)){
+                    if(!datos.TEXTO?.length > 0){
+                        throw crearError('MISSING_MESSAGE') 
                     }
-            } else{
-                const error = new Error('Datos de Autor erroneos')
-                error.tipo = 'no autor data'
-                throw error
-            }
-        } else if(type === 'Producto'){
-            const Producto = await this.coleccion.find({TITLE: `${datos.TITLE}`}).toArray()
-            if (Producto.length === 0){
-                NewElement = {
-                    TITLE: datos.TITLE,
-                    PRICE: datos.PRICE,
-                    THUMBNAIL: datos.THUMBNAIL
+                    NewElement = {
+                        AUTHOR:
+                            {
+                                EMAIL: datos.EMAIL,
+                                NOMBRE: datos.NOMBRE,
+                                APELLIDO: datos.APELLIDO,
+                                EDAD: datos.EDAD,
+                                ALIAS: datos.ALIAS,
+                                AVATAR: datos.AVATAR
+                            },
+                        DATE: `${Getdate()}`,
+                        TEXT: datos.TEXTO
+                        }
+                } else{
+                    throw crearError('MISSING_DATA', 'Datos de Autor erroneos')
+                }
+            } else if(type === 'Producto'){
+                const Producto = await this.coleccion.find({TITLE: `${datos.TITLE}`}).toArray()
+                if (Producto.length === 0){
+                    NewElement = {
+                        TITLE: datos.TITLE,
+                        PRICE: datos.PRICE,
+                        THUMBNAIL: datos.THUMBNAIL
+                    }
+                } else {
+                    throw crearError('DUPLICATED_PRODUCT')
                 }
             } else {
-                const error = new Error('Producto Duplicado')
-                error.tipo = 'duplicated product'
-                throw error
+                throw crearError('UNKNOWN_TYPE', `Tipo ${type} desconocido `)
             }
-        } else {
-            const error = new Error(`Typo ${type} desconocido `)
-            error.tipo = 'unknown type'
-            throw error
-        }
-        const MongoID =  await this.coleccion.insertOne(NewElement)
-        NewElement.ID = MongoID.insertedId
-        console.log(`Nuevo ${type} creado`)
-        if( type === 'Producto') {
-            return NewElement
-        }
+            const MongoID =  await this.coleccion.insertOne(NewElement)
+            NewElement.ID = MongoID.insertedId
+            console.log(`Nuevo ${type} creado`)
+            if( type === 'Producto') {
+                return NewElement
+            }
         }
         catch(error){
             console.log(`No se pudo crear un nuevo ${type}.`)
-            console.log(error)
             throw error
         }
     }
     async cleanById(id, type){
         let accion
         let resultado
-        const MongoID = ObjectId(id)
         try{
+            if(id.length != 24){
+                throw crearError('MISSING_DATA', 'El id debe contener 24 caracteres')
+            }
+            const MongoID = ObjectId(`${id}`)
             if(type === 'Producto'){
                 resultado = await this.coleccion.findOneAndDelete({_id: MongoID})
                 accion = 'borrado'   
             } else {
-                const error = new Error(`Typo ${type} desconocido `)
-                error.tipo = 'unknown type'
-                throw error
+                throw crearError('UNKNOWN_TYPE', `Tipo ${type} desconocido`)
             }
             if(!resultado.value){
-                const error = new Error(`El ${type} con id ${id} no fue encotrado`)
-                error.tipo = 'db not found'
-                throw error
+                throw crearError('NOT_FOUND', `El ${type} con id ${id} no fue encotrado`)
             } else {
                 console.log(`El ${type} se a ${accion} exitosamente!`)
             }
         }
         catch(error){
-            if(error.tipo != 'db not found' && error.tipo != 'unknown type' ){
+            if(error.tipo != 'NOT_FOUND' && error.tipo != 'UNKNOWN_TYPE' ){
                 console.log(`El ${type} no pudo ser ${accion}`)
             }
             throw error
         }
     }
     async getAll(){
-        
         try{
             const AllObjects = await this.coleccion.find().toArray()
             return AllObjects
@@ -106,60 +96,55 @@ class Class_Mongo {
     }
 
     async update(id, dato, type){
-        let hoy = new Date()
         let resultado
         let accion
-        const MongoID = ObjectId(id)
         try{
+            if(id.length != 24){
+                throw crearError('MISSING_DATA', 'El id debe contener 24 caracteres')
+            }
+            const MongoID = ObjectId(id)
             if(type === 'Producto'){
                 resultado = await this.coleccion.findOneAndUpdate({_id: MongoID}, 
                     {$set: {
-                        TIMESTAMP: `${hoy.toDateString() +' '+ hoy.toLocaleTimeString()}`,
-                        NOMBRE: dato.NOMBRE,
-                        DESCRIPCION: dato.DESCRIPCION,
-                        CODIGO: dato.CODIGO,
-                        FOTO: dato.FOTO,
-                        PRECIO: dato.PRECIO,
-                        STOCK: dato.STOCK
+                        TITLE: dato.TITLE,
+                        PRICE: dato.PRICE,
+                        THUMBNAIL: dato.THUMBNAIL
                     }})
                 resultado = resultado.value
                 accion = 'actualizo el producto!'                                  
             } else {
-                const error = new Error(`Typo ${type} desconocido `)
-                error.tipo = 'unknown type'
-                throw error
+                throw crearError('UNKNOWN_TYPE', `Tipo ${type} desconocido`)
             }
             if(!resultado){
-                const error = new Error(`El ${type} con id ${id} no fue encotrado`)
-                error.tipo = 'db not found'
-                throw error
+                throw crearError('NOT_FOUND', `El ${type} con id ${id} no fue encotrado`)
             } else {
                 console.log(`Se ${accion}`)
             }
         }
         catch(error){
-            if(error.tipo != 'db not found' && error.tipo != 'unknown type' ){
+            if(error.tipo != 'NOT_FOUND' && error.tipo != 'UNKNOWN_TYPE' ){
                 console.log(`No se pudo ${accion}`)
             }
             throw error
         }
     }
     async getByID(id){
-        const MongoID = ObjectId(id)
         try{
+            if(id.length != 24){
+                throw crearError('MISSING_DATA', 'El id debe contener 24 caracteres')
+            }
+            const MongoID = ObjectId(id)
             const ElementoBuscado = await this.coleccion.findOne({_id: MongoID})
             if (!ElementoBuscado) {
-                const error = new Error('No existe el elemento buscado')
-                error.tipo = 'db not found'
-                throw error
+                throw crearError('NOT_FOUND')
             }
             return ElementoBuscado
         }
         catch(error){
-            if(error.tipo === 'db not found'){
+            if(error.tipo === 'NOT_FOUND'){
                 throw error
             } else{
-                console.log('No se pudo leer el archivo. :(')
+                console.log('No se pudo leer la base')
                 console.log(error)
                 throw error
             }

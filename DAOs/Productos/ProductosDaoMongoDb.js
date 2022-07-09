@@ -6,7 +6,12 @@ class ProductosDaoMongoDb extends Class_Mongo {
         super('Productos')
     }
     async save(datos){
-        return await super.save(datos, 'Producto')
+        try{
+            return await super.save(datos, 'Producto')
+        }
+        catch(error){
+            throw error
+        }
      }
      async deleteById(id){
          await super.cleanById(id, 'Producto')

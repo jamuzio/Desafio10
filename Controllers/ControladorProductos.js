@@ -1,26 +1,28 @@
 import ProductosDaoMongoDb from '../DAOs/Productos/ProductosDaoMongoDb.js'
+import crearError from '../Tools/Error_Generator.js'
+
 
 const Productos = new ProductosDaoMongoDb()
 
 const ControladorProductos = {
-    AllProd: async (req, res) => {
-        let AllProd = await Productos.getAll()
-        res.send(AllProd)
+    AllProd: async (req, res, next) => {
+        try {
+            const AllProd = await Productos.getAll()
+            res.send(AllProd)
+        } catch (error) {
+            next(error)
+        }
     },
-    ProdByID: async (req, res) => {
+    ProdByID: async (req, res, next) => {
         const id = req.params.id
         try {
             const ProductoBuscado = await Productos.getById(id);
             res.json(ProductoBuscado)
         } catch (error) {
-            if (error.tipo === 'db not found') {
-                res.status(404).json({ error: error.message })
-            } else {
-                res.status(500).json({ error: error.message })
-            }
+            next(error)
         }
     },
-    AddNewProd: async (req, res) => {
+    AddNewProd: async (req, res, next) => {
         const NewProduct = req.body
         let ProductAdded
         try {
@@ -29,23 +31,14 @@ const ControladorProductos = {
                 NewProduct.hasOwnProperty("THUMBNAIL")){
                 ProductAdded = await Productos.save(NewProduct);
             } else {
-                const error = new Error('El formato no es correcto')
-                error.tipo = 'bad format'
-                throw error
+                throw crearError('MISSING_DATA')
             }
             res.status(201).json({ProductAdded})
         } catch (error) {
-            if (error.tipo === 'bad format'){
-                res.status(406).json({ error: error.message })
-            }else if (error.tipo === 'duplicated product'){
-                res.status(409).json({ error: error.message })
-            }else {
-                res.status(500).json({ error: error.message })
-            }
-
+            next(error)
         }
     },
-    UpdateProd: async (req, res) => {
+    UpdateProd: async (req, res, next) => {
         const id = req.params.id
         const UpdateData = req.body
         try {
@@ -54,31 +47,20 @@ const ControladorProductos = {
                 UpdateData.hasOwnProperty("THUMBNAIL")){
                     await Productos.UpdateProd(id, UpdateData);
             } else {
-                const error = new Error('El formato no es correcto')
-                error.tipo = 'bad format'
-                throw error
+                throw crearError('MISSING_DATA')
             }
             res.status(202).json(UpdateData)
         } catch (error) {
-            if (error.tipo === 'bad format'){
-                res.status(406).json({ error: error.message })
-            }else {
-                res.status(500).json({ error: error.message })
-            }
-
+            next(error)
         }
     },
-    DeleteProdByID: async (req, res) => {
+    DeleteProdByID: async (req, res, next) => {
         const id = req.params.id
         try {
             await Productos.deleteById(id);
             res.status(202).send('Producto Eliminado con exito')
         } catch (error) {
-            if (error.tipo === 'db not found') {
-                res.status(404).json({ error: error.message })
-            } else {
-                res.status(500).json({ error: error.message })
-            }
+            next(error)
         }
     }
 
@@ -86,8 +68,12 @@ const ControladorProductos = {
 
 const FunctionsProductCtrl = {
     AllProd: async () => {
-        let AllProd = await Productos.getAll()
-        return AllProd
+        try {
+            const AllProd = await Productos.getAll()
+            return AllProd
+        } catch (error) {
+            throw error
+        }
     },
     AddNewProd: async NewProduct => {
         try {
@@ -99,20 +85,11 @@ const FunctionsProductCtrl = {
                 NewProduct.THUMBNAIL.length > 0){
                     await Productos.save(NewProduct);
             } else {
-                const error = new Error('El formato no es correcto')
-                error.tipo = 'bad format'
-                throw error
+                throw crearError('MISSING_DATA')
             }
             return "Product added"
         } catch (error) {
             throw error
-           /* if (error.tipo === 'bad format'){
-                res.status(406).json({ error: error.message })
-            }else if (error.tipo === 'duplicated product'){
-                res.status(409).json({ error: error.message })
-            }else {
-                res.status(500).json({ error: error.message })
-            }*/
         }
     }
 }
