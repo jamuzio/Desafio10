@@ -42,13 +42,24 @@ class Class_Mongo {
                 } else {
                     throw crearError('DUPLICATED_PRODUCT')
                 }
+            }
+            else if(type === 'Usuario'){
+                const Usuario = await this.coleccion.find({EMAIL: `${datos.EMAIL}`}).toArray()
+                if (Usuario.length === 0){
+                    NewElement = {
+                        EMAIL: datos.EMAIL,
+                        PWD: datos.PWD
+                    }
+                } else {
+                    throw crearError('DUPLICATED_USER')
+                }
             } else {
                 throw crearError('UNKNOWN_TYPE', `Tipo ${type} desconocido `)
             }
             const MongoID =  await this.coleccion.insertOne(NewElement)
             NewElement.ID = MongoID.insertedId
             console.log(`Nuevo ${type} creado`)
-            if( type === 'Producto') {
+            if( type === 'Producto' || type === 'Usuario') {
                 return NewElement
             }
         }
@@ -126,6 +137,33 @@ class Class_Mongo {
                 console.log(`No se pudo ${accion}`)
             }
             throw error
+        }
+    }
+    async getByName(dato, type){
+        let ElementoBuscado
+        try{
+            switch (type) {
+                case 'Usuario': 
+                    ElementoBuscado = await this.coleccion.findOne({EMAIL: `${dato}`})
+                    break
+                case 'Producto':
+                    ElementoBuscado = await this.coleccion.findOne({TITLE: `${dato}`})
+                    throw crearError('UNKNOWN_TYPE', `Tipo ${type} desconocido`)
+            }
+            if (!ElementoBuscado) {
+                throw crearError('NOT_FOUND')
+            }
+            return ElementoBuscado
+        }
+        catch(error){
+            if(error.tipo === 'NOT_FOUND' || error.tipo === 'UNKNOWN_TYPE'){
+                throw error
+            } else{
+                console.log('No se pudo leer la base')
+                console.log(error)
+                throw error
+            }
+          
         }
     }
     async getByID(id){

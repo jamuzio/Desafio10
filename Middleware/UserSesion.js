@@ -1,7 +1,7 @@
 
 export const UserHasSesion = (req, res, next) => {
-    //console.log(res)
-    if (req.session?.user?.length > 0) {
+    //console.log(req)
+    if (req.isAuthenticated()) {
         req.session.cookie.originalMaxAge
         next()
     } else {

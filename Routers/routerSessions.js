@@ -1,10 +1,19 @@
 import { Router } from 'express'
-import LoginController from '../Controllers/LoginController.js'
+import {UserLoginStateController, registroController, loginController} from '../Controllers/UserController.js'
 
-const routerSessions = new Router()
+const routerSession = new Router()
 
-routerSessions.post('/login', LoginController.Login)
-routerSessions.get('/logout', LoginController.Logout)
+routerSession.get('/logout', UserLoginStateController.Logout)
+routerSession.post('/register', registroController)
+routerSession.post('/successRegister', UserLoginStateController.successRegister)
+routerSession.get('/failRegister', UserLoginStateController.failRegister)
+
+// login
+routerSession.post('/login', loginController)
+routerSession.post('/successLogin', UserLoginStateController.successLogin)
+routerSession.get('/failLogin', UserLoginStateController.failLogin)
 
 
-export default routerSessions
+
+export default routerSession
+

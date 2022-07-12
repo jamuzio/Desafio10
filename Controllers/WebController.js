@@ -7,7 +7,7 @@ const Productos = new ProductosDaoMongoDb()
 
 const WebController = {
     AddNewProd: async (req, res) => {
-        const user = req.session.user
+        const user = req.user.EMAIL
         const data = {
             user
         }
@@ -15,7 +15,7 @@ const WebController = {
     },
     ProdDisplay:async (req, res) => {
         let AllProd = await Productos.getAll()
-        const user = req.session.user
+        const user = req.user.EMAIL
         const data = {
             user,
             AllProd,
@@ -45,6 +45,9 @@ const WebController = {
             user
         }
         res.render('Logout', data)
+    },
+    Registro: (req, res) => {
+        res.render('registroUsuario')
     }
 
 }

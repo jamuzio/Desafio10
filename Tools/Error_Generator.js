@@ -7,6 +7,9 @@ function crearError(tipo, mensaje = false) {
         case 'DUPLICATED_PRODUCT':
             mensaje = 'Producto Dupliacado'
             break
+        case 'DUPLICATED_USER':
+            mensaje = 'Usuario ya regitrado'
+            break
         case 'MISSING_DATA':
             mensaje = 'Se requieren mas datos para completar esta accion'
             break

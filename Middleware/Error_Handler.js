@@ -16,6 +16,9 @@ function errorHandler(error, req, res, next) {
         case 'DUPLICATED_PRODUCT':
             res.status(409)
             break
+        case 'DUPLICATED_USER':
+            res.status(409)
+            break
         default:
             KnowError = false
             res.status(500)
