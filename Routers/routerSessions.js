@@ -1,11 +1,11 @@
 import { Router } from 'express'
-import {UserLoginStateController, registroController, loginController} from '../Controllers/UserController.js'
+import UserController from '../Controllers/UserController.js'
 
 const routerSession = new Router()
 
-routerSession.get('/logout', UserLoginStateController.Logout)
-routerSession.post('/register', registroController)
-routerSession.post('/login', loginController)
+routerSession.get('/logout', UserController.Logout)
+routerSession.post('/register', UserController.registroController)
+routerSession.post('/login', UserController.loginController)
 
 
 

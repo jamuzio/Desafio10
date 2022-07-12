@@ -1,7 +1,7 @@
 import passport from 'passport'
 
 
-const UserLoginStateController = {
+const UserController = {
     Logout: (req, res, next) => {
         if (req.isAuthenticated()) {
             req.logout((error) =>{
@@ -9,21 +9,19 @@ const UserLoginStateController = {
             })
         }
         res.status(200).redirect('/login')
-    }
+    },
+    registroController: passport.authenticate('registro', {
+        successRedirect: '/login',
+        failureRedirect: '/failRegister',
+    }), 
+    loginController: passport.authenticate('login', {
+        successRedirect: '/',
+        failureRedirect: '/failLogin',
+    })
+
 }
 
-export { UserLoginStateController }
-
-
-export const registroController = passport.authenticate('registro', {
-    successRedirect: '/login',
-    failureRedirect: '/failRegister',
-})
-
-export const loginController = passport.authenticate('login', {
-    successRedirect: '/',
-    failureRedirect: '/failLogin',
-})
+export default UserController
 
 
 
