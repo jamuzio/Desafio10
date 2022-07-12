@@ -40,7 +40,7 @@ const WebController = {
         res.render('Login', data)
     },
     Logout: (req, res) => {
-        const user = req.session.user
+        const user = req.user.EMAIL
         const data = {
             user
         }
@@ -48,6 +48,12 @@ const WebController = {
     },
     Registro: (req, res) => {
         res.render('registroUsuario')
+    },
+    failLogin: (req, res) => {
+        res.status(401).render('FailLogin')
+    },
+    failRegister: (req, res) => {
+        res.status(400).render('FailRegister')
     }
 
 }

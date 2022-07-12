@@ -11,5 +11,7 @@ routerWeb.get('/productos-test', UserHasSesion, WebController.TestProdDisplay)
 routerWeb.get('/login', WebController.Login)
 routerWeb.get('/logout', WebController.Logout)
 routerWeb.get('/registro', WebController.Registro)
+routerWeb.get('/failRegister', WebController.failRegister)
+routerWeb.get('/failLogin', WebController.failLogin)
 
 export default routerWeb 
