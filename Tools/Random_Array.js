@@ -1,7 +1,6 @@
 
 process.on('message', msg => {
     if(!isNaN(msg)){
-        console.log(parseInt(msg))
         const JSON_Obj = JSON_Random_gen(parseInt(msg))
         process.send(JSON_Obj)
         process.exit()        
@@ -15,7 +14,7 @@ process.send('listo')
 
 function JSON_Random_gen(n){
     const MIN = 1
-    const MAX = 1000
+    const MAX = 1001
     const R_array = Random_Filler(n, MIN, MAX)
     const JSON_Obj = {}
     for(let i = 1; i < MAX; i++){
