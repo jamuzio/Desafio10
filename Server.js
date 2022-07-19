@@ -10,12 +10,13 @@ import eventCnx from './Controllers/socketController.js'
 import session from './Middleware/Session.js'
 import errorHandler from './Middleware/Error_Handler.js'
 import { passportMiddleware, passportSessionHandler } from './Middleware/passport.js'
+import { puerto as PORT}  from './Config/Yargs_config.js'
 
 
 const app = express()
 const httpServer = new HttpServer(app)
 const io = new Socketserver(httpServer)
-const PORT = 8080
+//const PORT = PUERTO
 
 
 app.use(express.static('Public'))
