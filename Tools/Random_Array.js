@@ -1,6 +1,19 @@
 
+process.on('message', msg => {
+    if(!isNaN(msg)){
+        console.log(parseInt(msg))
+        const JSON_Obj = JSON_Random_gen(parseInt(msg))
+        process.send(JSON_Obj)
+        process.exit()        
+    } else{
+        console.log('Se recibido un parametro no valido')
+    }
+})
 
-export default function JSON_Random_gen(n){
+process.send('listo')
+
+
+function JSON_Random_gen(n){
     const MIN = 1
     const MAX = 1000
     const R_array = Random_Filler(n, MIN, MAX)
