@@ -1,5 +1,6 @@
 import { MongoClient } from 'mongodb'
-import { MONGOATLAS } from '../Secure/Config.js'
+
+const MONGOATLAS = process.env.MONGOATLAS
 
 const mongodb = {
     cnxStr: MONGOATLAS,

@@ -1,6 +1,8 @@
 import expressSession from 'express-session'
 import MongoStore from 'connect-mongo'
-import { MONGOATLAS, SECRETWORD } from '../Secure/Config.js'
+
+const MONGOATLAS = process.env.MONGOATLAS
+const SECRETWORD = process.env.SECRETWORD
 
 const advancedOptions = { useNewUrlParser: true, useUnifiedTopology: true }
 

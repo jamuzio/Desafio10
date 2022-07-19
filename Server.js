@@ -1,3 +1,4 @@
+import {env_config} from './Env/dotenv_config.js'
 import express from 'express'
 import routerProductos from './Routers/routerProductos.js'
 import routerWeb from './Routers/routerWeb.js'
@@ -9,6 +10,7 @@ import eventCnx from './Controllers/socketController.js'
 import session from './Middleware/Session.js'
 import errorHandler from './Middleware/Error_Handler.js'
 import { passportMiddleware, passportSessionHandler } from './Middleware/passport.js'
+
 
 const app = express()
 const httpServer = new HttpServer(app)
