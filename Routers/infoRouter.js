@@ -1,4 +1,5 @@
 import { Router } from "express"
+import os from 'os'
 
 const InfoRouter = new Router()
 
@@ -10,7 +11,8 @@ const getInfo = (req, res) => {
         "Memoria total reservada": process.memoryUsage().rss,
         "Path de ejecución": process.execPath,
         "Process id": process.pid,
-        "Carpeta del proyecto": process.cwd()
+        "Carpeta del proyecto": process.cwd(),
+        "Cantidad de Procesadores": os.cpus().length
     }
     res.status(200).json(Sysinfo)
 }

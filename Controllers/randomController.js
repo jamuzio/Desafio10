@@ -10,6 +10,7 @@ const randomController = {
                 if (msg === 'listo') {
                     Gen_randoms.send(N)
                 } else {
+                    msg["Proceso"] = process.pid
                     res.status(200).json(msg)
                 }
             }

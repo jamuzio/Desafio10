@@ -1,12 +1,12 @@
 {
   "type": "module",
-  "name": "desafio11",
+  "name": "desafio13",
   "version": "1.0.0",
   "description": "",
-  "main": "Server.js",
+  "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node Server.js"
+    "start": "node ."
   },
   "author": "",
   "license": "ISC",
