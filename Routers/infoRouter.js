@@ -15,6 +15,7 @@ const getInfo = (req, res) => {
         "Carpeta del proyecto": process.cwd(),
         "Cantidad de Procesadores": os.cpus().length
     }
+    if(req.query?.consolelog) console.log(Sysinfo)
     res.status(200).json(Sysinfo)
 }
 
