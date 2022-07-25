@@ -1,5 +1,6 @@
 import { Router } from "express"
 import os from 'os'
+import compression from 'compression'
 
 const InfoRouter = new Router()
 
@@ -18,6 +19,7 @@ const getInfo = (req, res) => {
 }
 
 InfoRouter.get('/', getInfo )
+InfoRouter.get('/con-compresion', compression(), getInfo )
 
 export default InfoRouter
 

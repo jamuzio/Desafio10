@@ -1,3 +1,5 @@
+import logger from "../Tools/logger.js"
+
 function errorHandler(error, req, res, next) {
     let KnowError = true
     switch (error.tipo) {
@@ -24,9 +26,10 @@ function errorHandler(error, req, res, next) {
             res.status(500)
     }
     if(KnowError){
-        console.log(`${error.tipo}: ${error.message}`)
+        logger.error(`${error.tipo}: ${error.message}`)
         res.json({ msj: error.message })
     } else{
+        logger.error(`ATENCION: A ocurrido un error sin manejo especifico. \n\t ${error.stack} `)
         res.json({ msj: "Error Interno del servidor" })
         throw error
 

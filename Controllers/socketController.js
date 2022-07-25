@@ -1,6 +1,7 @@
 import { FunctionsProductCtrl } from './ControladorProductos.js'
 import MensajesDaoMongoDb from '../DAOs/Mensajes/MensajesDaoMongoDb.js'
-import { normalize, denormalize, schema } from 'normalizr' 
+import { normalize, denormalize, schema } from 'normalizr'
+import logger from '../Tools/logger.js'
 
 const Mensajes = new MensajesDaoMongoDb()
 
@@ -16,7 +17,7 @@ const MessageSchema = new schema.Entity('Mesanjes', {
 const MessagesSchema = [MessageSchema]
 
 async function eventCnx(socket, io) {
-    console.log("Nueva conexion iniciada")
+    logger.info("Nueva conexion iniciada")
     await Prod_Emit(socket)
     await Msj_emit(io)
     socket.on('NewProd', NewProd => eventoNewPrdo(socket, io, NewProd))
@@ -31,10 +32,13 @@ async function eventoNewPrdo(socket, io, NewProd){
     }
     catch(error){
         if (error.tipo === 'MISSING_DATA'){
-            socket.emit('NewProd_res', "El Formato no es Correcto")
+            logger.error("(SOCKET) MISSING_DATA: Se requieren mas datos para completar esta accion")
+            socket.emit('NewProd_res', "Se requieren mas datos para completar esta accion")
         }else if (error.tipo === 'DUPLICATED_PRODUCT'){
+            logger.error("(SOCKET) DUPLICATED_PRODUCT: Producto Duplicado")
             socket.emit('NewProd_res', "Producto Duplicado")
         }else {
+            logger.error(`ATENCION: A ocurrido un error desconocido en el socket. \n\t ${error.stack} `)
             socket.emit('NewProd_res', "Error desconocido")
         }
     }
@@ -47,11 +51,14 @@ async function eventoMensajeController(socket, io, mensaje) {
     }
     catch(error){
         if (error.tipo === 'MISSING_DATA'){
+            logger.error("(SOCKET) MISSING_DATA: Debe ingresar correctamente los datos de autor para usar el chat")
             socket.emit('Msj_res', "Debe ingresar correctamente los datos de autor para usar el chat")
         }else if (error.tipo === 'MISSING_MESSAGE'){
+            logger.error("(SOCKET) MISSING_MESSAGE: Debe ingresar un mensaje")
             socket.emit('Msj_res', "Debe ingresar un mensaje")
         }
         else {
+            logger.error(`ATENCION: A ocurrido un error desconocido en el socket. \n\t ${error.stack} `)
             socket.emit('Msj_res', "Error en servidor, por favor intente nuevamente")
         }
     }

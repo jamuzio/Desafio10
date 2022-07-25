@@ -1,3 +1,4 @@
+import logger from "./logger"
 
 process.on('message', msg => {
     if(!isNaN(msg)){
@@ -5,7 +6,7 @@ process.on('message', msg => {
         process.send(JSON_Obj)
         process.exit()        
     } else{
-        console.log('Se recibido un parametro no valido')
+        logger.error('Random Array: Se recibido un parametro no valido')
     }
 })
 

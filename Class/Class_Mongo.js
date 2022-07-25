@@ -1,6 +1,7 @@
 import dbDesafio9 from "../DataBase/MongoServer.js"
 import { ObjectId } from "mongodb"
 import crearError from "../Tools/Error_Generator.js"
+import logger from "../Tools/logger.js"
 
 
 class Class_Mongo {
@@ -58,13 +59,13 @@ class Class_Mongo {
             }
             const MongoID =  await this.coleccion.insertOne(NewElement)
             NewElement.ID = MongoID.insertedId
-            console.log(`Nuevo ${type} creado`)
+            logger.info(`Nuevo ${type} creado`)
             if( type === 'Producto' || type === 'Usuario') {
                 return NewElement
             }
         }
         catch(error){
-            console.log(`No se pudo crear un nuevo ${type}.`)
+            logger.info(`No se pudo crear un nuevo ${type}.`)
             throw error
         }
     }
@@ -85,12 +86,12 @@ class Class_Mongo {
             if(!resultado.value){
                 throw crearError('NOT_FOUND', `El ${type} con id ${id} no fue encotrado`)
             } else {
-                console.log(`El ${type} se a ${accion} exitosamente!`)
+                logger.info(`El ${type} se a ${accion} exitosamente!`)
             }
         }
         catch(error){
             if(error.tipo != 'NOT_FOUND' && error.tipo != 'UNKNOWN_TYPE' ){
-                console.log(`El ${type} no pudo ser ${accion}`)
+                logger.info(`El ${type} no pudo ser ${accion}`)
             }
             throw error
         }
@@ -101,7 +102,7 @@ class Class_Mongo {
             return AllObjects
         }
         catch(error){
-            console.log('No se pudo leer la base')
+            logger.info('No se pudo leer la base')
             throw error
         }
     }
@@ -129,12 +130,12 @@ class Class_Mongo {
             if(!resultado){
                 throw crearError('NOT_FOUND', `El ${type} con id ${id} no fue encotrado`)
             } else {
-                console.log(`Se ${accion}`)
+                logger.info(`Se ${accion}`)
             }
         }
         catch(error){
             if(error.tipo != 'NOT_FOUND' && error.tipo != 'UNKNOWN_TYPE' ){
-                console.log(`No se pudo ${accion}`)
+                logger.info(`No se pudo ${accion}`)
             }
             throw error
         }
@@ -159,8 +160,7 @@ class Class_Mongo {
             if(error.tipo === 'NOT_FOUND' || error.tipo === 'UNKNOWN_TYPE'){
                 throw error
             } else{
-                console.log('No se pudo leer la base')
-                console.log(error)
+                logger.info('No se pudo leer la base')
                 throw error
             }
           
@@ -182,8 +182,8 @@ class Class_Mongo {
             if(error.tipo === 'NOT_FOUND'){
                 throw error
             } else{
-                console.log('No se pudo leer la base')
-                console.log(error)
+                logger.info('No se pudo leer la base')
+                logger.info(error)
                 throw error
             }
           
