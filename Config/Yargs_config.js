@@ -9,7 +9,7 @@ const {puerto, modo} = yargs
     })
     .default({
         modo: 'fork',
-        puerto: 8080
+        puerto: 80
     })
     .argv
 
