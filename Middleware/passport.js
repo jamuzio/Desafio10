@@ -1,7 +1,7 @@
 import passport from 'passport'
 import { Strategy } from 'passport-local'
 import UsuarioDaoMongoDb from '../DAOs/Usuarios/UsuarioDaoMongoDb.js'
-//import crearError from '../Tools/Error_Generator.js'
+
 
 const usuario = new UsuarioDaoMongoDb()
 

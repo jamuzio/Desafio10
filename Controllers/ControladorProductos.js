@@ -1,5 +1,5 @@
 import ProductosDaoMongoDb from '../DAOs/Productos/ProductosDaoMongoDb.js'
-import crearError from '../Tools/Error_Generator.js'
+import error_generator from "../Tools/Error_Generator.js"
 
 
 const Productos = new ProductosDaoMongoDb()
@@ -31,7 +31,7 @@ const ControladorProductos = {
                 NewProduct.hasOwnProperty("THUMBNAIL")){
                 ProductAdded = await Productos.save(NewProduct);
             } else {
-                throw crearError('MISSING_DATA')
+                throw error_generator.MISSING_DATA()
             }
             res.status(201).json({ProductAdded})
         } catch (error) {
@@ -47,7 +47,7 @@ const ControladorProductos = {
                 UpdateData.hasOwnProperty("THUMBNAIL")){
                     await Productos.UpdateProd(id, UpdateData);
             } else {
-                throw crearError('MISSING_DATA')
+                throw error_generator.MISSING_DATA()
             }
             res.status(202).json(UpdateData)
         } catch (error) {
@@ -85,7 +85,7 @@ const FunctionsProductCtrl = {
                 NewProduct.THUMBNAIL.length > 0){
                     await Productos.save(NewProduct);
             } else {
-                throw crearError('MISSING_DATA')
+                throw error_generator.MISSING_DATA()
             }
             return "Product added"
         } catch (error) {

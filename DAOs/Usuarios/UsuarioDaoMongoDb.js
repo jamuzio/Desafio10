@@ -1,6 +1,6 @@
 import Class_Mongo from "../../Class/Class_Mongo.js"
 import bCrypt from "bcrypt"
-import crearError from "../../Tools/Error_Generator.js"
+import error_generator from "../../Tools/Error_Generator.js"
 
 class UsuarioDaoMongoDb extends Class_Mongo {
 
@@ -12,7 +12,7 @@ class UsuarioDaoMongoDb extends Class_Mongo {
             if(datos.EMAIL?.length === 0 || 
                 !emailRegex.test(datos.EMAIL) ||
                 datos.PWD?.length === 0 ){
-                    throw crearError('MISSING_DATA')
+                    throw error_generator.MISSING_DATA()
                 }
             datos.PWD = createHash(datos.PWD)
             const newuser = await super.save(datos, 'Usuario')
@@ -34,14 +34,14 @@ class UsuarioDaoMongoDb extends Class_Mongo {
             usuarioBuscado = await this.getByName(username)
         } catch (error) {
             if(error.tipo === 'NOT_FOUND'){
-                throw crearError('AUTHE_ERROR')
+                throw error_generator.AUTHE_ERROR()
             } else{
                 throw error
             }
         }
         if (bCrypt.compareSync(password, usuarioBuscado.PWD)) {
             return usuarioBuscado
-        }else throw crearError('AUTHE_ERROR')
+        }else throw error_generator.AUTHE_ERROR()
         
     }
     async getByName(Name){

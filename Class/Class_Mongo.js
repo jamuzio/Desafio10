@@ -1,6 +1,6 @@
 import dbDesafio9 from "../DataBase/MongoServer.js"
 import { ObjectId } from "mongodb"
-import crearError from "../Tools/Error_Generator.js"
+import error_generator from "../Tools/Error_Generator.js"
 import logger from "../Tools/logger.js"
 
 
@@ -14,7 +14,7 @@ class Class_Mongo {
             if(type === 'Mensajes' ){
                 if(AuthorChecker(datos)){
                     if(!datos.TEXTO?.length > 0){
-                        throw crearError('MISSING_MESSAGE') 
+                        throw error_generator.MISSING_MESSAGE() 
                     }
                     NewElement = {
                         AUTHOR:
@@ -30,7 +30,7 @@ class Class_Mongo {
                         TEXT: datos.TEXTO
                         }
                 } else{
-                    throw crearError('MISSING_DATA', 'Datos de Autor erroneos')
+                    throw error_generator.MISSING_DATA('Datos de autor erroneos')
                 }
             } else if(type === 'Producto'){
                 const Producto = await this.coleccion.find({TITLE: `${datos.TITLE}`}).toArray()
@@ -41,7 +41,7 @@ class Class_Mongo {
                         THUMBNAIL: datos.THUMBNAIL
                     }
                 } else {
-                    throw crearError('DUPLICATED_PRODUCT')
+                    throw error_generator.DUPLICATED_PRODUCT()
                 }
             }
             else if(type === 'Usuario'){
@@ -52,10 +52,10 @@ class Class_Mongo {
                         PWD: datos.PWD
                     }
                 } else {
-                    throw crearError('DUPLICATED_USER')
+                    throw error_generator.DUPLICATED_USER()
                 }
             } else {
-                throw crearError('UNKNOWN_TYPE', `Tipo ${type} desconocido `)
+                throw error_generator.UNKNOWN_TYPE(`Tipo ${type} desconocido `)
             }
             const MongoID =  await this.coleccion.insertOne(NewElement)
             NewElement.ID = MongoID.insertedId
@@ -74,17 +74,17 @@ class Class_Mongo {
         let resultado
         try{
             if(id.length != 24){
-                throw crearError('MISSING_DATA', 'El id debe contener 24 caracteres')
+                throw error_generator.MISSING_DATA('El id debe contener 24 caracteres')
             }
             const MongoID = ObjectId(`${id}`)
             if(type === 'Producto'){
                 resultado = await this.coleccion.findOneAndDelete({_id: MongoID})
                 accion = 'borrado'   
             } else {
-                throw crearError('UNKNOWN_TYPE', `Tipo ${type} desconocido`)
+                throw error_generator.UNKNOWN_TYPE(`Tipo ${type} desconocido`)
             }
             if(!resultado.value){
-                throw crearError('NOT_FOUND', `El ${type} con id ${id} no fue encotrado`)
+                throw error_generator.NOT_FOUND(`El ${type} con id ${id} no fue encotrado`)
             } else {
                 logger.info(`El ${type} se a ${accion} exitosamente!`)
             }
@@ -112,7 +112,7 @@ class Class_Mongo {
         let accion
         try{
             if(id.length != 24){
-                throw crearError('MISSING_DATA', 'El id debe contener 24 caracteres')
+                throw error_generator.MISSING_DATA('El id debe contener 24 caracteres')
             }
             const MongoID = ObjectId(id)
             if(type === 'Producto'){
@@ -125,10 +125,10 @@ class Class_Mongo {
                 resultado = resultado.value
                 accion = 'actualizo el producto!'                                  
             } else {
-                throw crearError('UNKNOWN_TYPE', `Tipo ${type} desconocido`)
+                throw error_generator.UNKNOWN_TYPE(`Tipo ${type} desconocido`)
             }
             if(!resultado){
-                throw crearError('NOT_FOUND', `El ${type} con id ${id} no fue encotrado`)
+                throw error_generator.NOT_FOUND(`El ${type} con id ${id} no fue encotrado`)
             } else {
                 logger.info(`Se ${accion}`)
             }
@@ -149,10 +149,12 @@ class Class_Mongo {
                     break
                 case 'Producto':
                     ElementoBuscado = await this.coleccion.findOne({TITLE: `${dato}`})
-                    throw crearError('UNKNOWN_TYPE', `Tipo ${type} desconocido`)
+                    break
+                default:
+                    throw error_generator.UNKNOWN_TYPE(`Tipo ${type} desconocido`)
             }
             if (!ElementoBuscado) {
-                throw crearError('NOT_FOUND')
+                throw error_generator.NOT_FOUND()
             }
             return ElementoBuscado
         }
@@ -169,12 +171,12 @@ class Class_Mongo {
     async getByID(id){
         try{
             if(id.length != 24){
-                throw crearError('MISSING_DATA', 'El id debe contener 24 caracteres')
+                throw error_generator.MISSING_DATA('El id debe contener 24 caracteres')
             }
             const MongoID = ObjectId(id)
             const ElementoBuscado = await this.coleccion.findOne({_id: MongoID})
             if (!ElementoBuscado) {
-                throw crearError('NOT_FOUND')
+                throw error_generator.NOT_FOUND()
             }
             return ElementoBuscado
         }
