@@ -1,9 +1,7 @@
-import ProductosDaoMongoDb from '../DAOs/Productos/ProductosDaoMongoDb.js'
+import { ProductosDao as Productos } from "../DAOs/Productos/index.js"
 import { faker } from '@faker-js/faker'
 faker.locale = 'es'
 const { commerce, image } = faker
-
-const Productos = new ProductosDaoMongoDb()
 
 const WebController = {
     AddNewProd: async (req, res) => {

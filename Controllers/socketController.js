@@ -1,9 +1,7 @@
 import { FunctionsProductCtrl } from './ControladorProductos.js'
-import MensajesDaoMongoDb from '../DAOs/Mensajes/MensajesDaoMongoDb.js'
+import { MensajesDao as Mensajes } from '../DAOs/Mensajes/index.js'
 import { normalize, denormalize, schema } from 'normalizr'
 import logger from '../Tools/logger.js'
-
-const Mensajes = new MensajesDaoMongoDb()
 
 //Definimos esquema de Autores
 const authorSchema = new schema.Entity('autores',{},{idAttribute: 'EMAIL'})

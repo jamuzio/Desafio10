@@ -1,6 +1,7 @@
 import Class_Mongo from "../../Class/Class_Mongo.js"
-import bCrypt from "bcrypt"
 import error_generator from "../../Tools/Error_Generator.js"
+import User from "../../Models/User.js"
+import generateID from "../../Tools/ID_gen.js"
 
 class UsuarioDaoMongoDb extends Class_Mongo {
 
@@ -9,29 +10,38 @@ class UsuarioDaoMongoDb extends Class_Mongo {
     }
     async save(datos){
         try{
-            if(datos.EMAIL?.length === 0 || 
-                !emailRegex.test(datos.EMAIL) ||
-                datos.PWD?.length === 0 ){
-                    throw error_generator.MISSING_DATA()
-                }
-            datos.PWD = createHash(datos.PWD)
-            const newuser = await super.save(datos, 'Usuario')
-            return {EMAIL:newuser.EMAIL, ID:newuser.ID}
+            const usuarioBuscado = await this.coleccion.find({EMAIL: `${datos.EMAIL}`}).toArray()
+            if (usuarioBuscado.length === 0){
+                const ID = generateID()
+                const usuario = new User({id:ID, email:datos.EMAIL, pwd:datos.PWD})
+                await super.save(usuario.datosCompletos())
+                return usuario.datos()
+            } else {
+                throw error_generator.DUPLICATED_USER()
+            }
         }
         catch(error){
             throw error
         }
      }
+
     async deleteById(id){
-         await super.cleanById(id, 'Usuario')
+        await super.cleanById(id)
      }
+
     async update(id, datos){
-        return await super.update(id, datos, 'Usuario')
+        throw error_generator.NOT_IMPLEMENTED('Metodo update no implemntado para UsuariosMongo')
      }
+
     async autenticar(username, password) {
         let usuarioBuscado
         try {
             usuarioBuscado = await this.getByName(username)
+            if(usuarioBuscado.authenticate(password)){
+                return usuarioBuscado.datos()
+            } else{
+                error_generator.AUTHE_ERROR()
+            }
         } catch (error) {
             if(error.tipo === 'NOT_FOUND'){
                 throw error_generator.AUTHE_ERROR()
@@ -39,25 +49,21 @@ class UsuarioDaoMongoDb extends Class_Mongo {
                 throw error
             }
         }
-        if (bCrypt.compareSync(password, usuarioBuscado.PWD)) {
-            return usuarioBuscado
-        }else throw error_generator.AUTHE_ERROR()
-        
     }
-    async getByName(Name){
-        const ElementoBuscado = await super.getByName(Name, 'Usuario')
-        return {ID: ElementoBuscado._id.toString() ,EMAIL: ElementoBuscado.EMAIL, PWD: ElementoBuscado.PWD}
+
+    async getByName(email){
+        let usuarioBuscado = await super.getOne('EMAIL', email)
+        console.log(usuarioBuscado)
+        const usuario = new User({id:usuarioBuscado._id, email: usuarioBuscado.EMAIL, pwd:usuarioBuscado.PWD}) 
+        return usuario
     }
-    async getByID(Name){
-        const ElementoBuscado = await super.getByID(Name, 'Usuario')
-        return {ID: ElementoBuscado._id.toString() ,EMAIL: ElementoBuscado.EMAIL}
+
+    async getByID(id){
+        let usuarioBuscado = await super.getOne('_id', id)
+        console.log(usuarioBuscado)
+        const usuario = new User({id:usuarioBuscado._id, email: usuarioBuscado.EMAIL, pwd:usuarioBuscado.PWD}) 
+        return usuario
     }
 }
 
 export default UsuarioDaoMongoDb
-
-function createHash(password) {
-    return bCrypt.hashSync(password, bCrypt.genSaltSync(10), null);
-}
-
-  const emailRegex = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;

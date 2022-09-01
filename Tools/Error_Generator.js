@@ -64,6 +64,12 @@ const error_generator = {
      */
     WRONG_TYPE: (mensaje = 'El tipo de dato es incorrecto este campo') => {
         return createError('WRONG_TYPE', mensaje)
+    },
+    /**
+     *@param mensaje {string} 'Mensaje opcional personalizado. Mensaje por defecto: Funcion/Metodo no implemetado'
+     */
+    NOT_IMPLEMENTED: (mensaje = 'Funcion/Metodo no implemetado') => {
+        return createError('NOT_IMPLEMENTED', mensaje)
     }
  }
 

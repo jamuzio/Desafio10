@@ -1,8 +1,6 @@
-import ProductosDaoMongoDb from '../DAOs/Productos/ProductosDaoMongoDb.js'
-import error_generator from "../Tools/Error_Generator.js"
+import { ProductosDao as Productos } from "../DAOs/Productos/index.js"
+import logger from "../Tools/logger.js"
 
-
-const Productos = new ProductosDaoMongoDb()
 
 const ControladorProductos = {
     AllProd: async (req, res, next) => {
@@ -24,17 +22,12 @@ const ControladorProductos = {
     },
     AddNewProd: async (req, res, next) => {
         const NewProduct = req.body
-        let ProductAdded
-        try {
-            if (NewProduct.hasOwnProperty("TITLE") && 
-                NewProduct.hasOwnProperty("PRICE") && 
-                NewProduct.hasOwnProperty("THUMBNAIL")){
-                ProductAdded = await Productos.save(NewProduct);
-            } else {
-                throw error_generator.MISSING_DATA()
-            }
-            res.status(201).json({ProductAdded})
-        } catch (error) {
+        try{
+            const ProductAdded = await Productos.save(NewProduct);
+            res.status(201).json(ProductAdded)
+            logger.info(`Se agrego el producto ${ProductAdded.TITLE} con el id: ${ProductAdded._id}`)
+        }
+        catch(error) {
             next(error)
         }
     },
@@ -42,15 +35,11 @@ const ControladorProductos = {
         const id = req.params.id
         const UpdateData = req.body
         try {
-            if (UpdateData.hasOwnProperty("TITLE") && 
-                UpdateData.hasOwnProperty("PRICE") && 
-                UpdateData.hasOwnProperty("THUMBNAIL")){
-                    await Productos.UpdateProd(id, UpdateData);
-            } else {
-                throw error_generator.MISSING_DATA()
-            }
-            res.status(202).json(UpdateData)
-        } catch (error) {
+            const updatedProd = await Productos.UpdateProd(id, UpdateData);
+            res.status(202).json(updatedProd)
+            logger.info(`Se actualizo el producto id: ${id} con los datos ${UpdateData}`)
+        } 
+        catch (error) {
             next(error)
         }
     },
@@ -59,6 +48,7 @@ const ControladorProductos = {
         try {
             await Productos.deleteById(id);
             res.status(202).send('Producto Eliminado con exito')
+            logger.info(`Se elimino el producto id: ${id}`)
         } catch (error) {
             next(error)
         }
@@ -71,24 +61,17 @@ const FunctionsProductCtrl = {
         try {
             const AllProd = await Productos.getAll()
             return AllProd
-        } catch (error) {
+        }
+        catch (error) {
             throw error
         }
     },
     AddNewProd: async NewProduct => {
-        try {
-            if (NewProduct.hasOwnProperty("TITLE") && 
-                NewProduct.hasOwnProperty("PRICE") && 
-                NewProduct.hasOwnProperty("THUMBNAIL")&&
-                NewProduct.TITLE.length > 0 &&
-                NewProduct.PRICE.length > 0 &&
-                NewProduct.THUMBNAIL.length > 0){
-                    await Productos.save(NewProduct);
-            } else {
-                throw error_generator.MISSING_DATA()
-            }
+        try{
+            const ProductAdded = await Productos.save(NewProduct);
             return "Product added"
-        } catch (error) {
+        }
+        catch (error) {
             throw error
         }
     }

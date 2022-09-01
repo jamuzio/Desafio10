@@ -1,9 +1,7 @@
 import passport from 'passport'
 import { Strategy } from 'passport-local'
-import UsuarioDaoMongoDb from '../DAOs/Usuarios/UsuarioDaoMongoDb.js'
+import { UsuarioDao as usuario } from '../DAOs/Usuarios/index.js'
 
-
-const usuario = new UsuarioDaoMongoDb()
 
 passport.use('registro', new Strategy({
     passReqToCallback: true,
@@ -31,8 +29,10 @@ passport.use('login', new Strategy({
     async (username, password, done) => {
         try {
             const user = await usuario.autenticar(username, password)
+            console.log(user)
             done(null, user)
         } catch (error) {
+            console.log(error)
             done(null, false)
         }
     }))
@@ -42,12 +42,14 @@ export const passportMiddleware = passport.initialize()
 // opcional =====================================================
 
 passport.serializeUser((user, done) => {
-    done(null, user.ID)
+    console.log(user)
+    done(null, user._id)
 })
 
 passport.deserializeUser( async (ID, done) => {
     try {
-        const user = await usuario.getByID(ID)
+        const usuarioBuscado = await usuario.getByID(ID)
+        const user = usuarioBuscado.datos()
         done(null, user)
     } catch (error) {
         done(error)
