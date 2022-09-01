@@ -32,7 +32,7 @@ class ProductosDaoMongoDb extends Class_Mongo {
             throw error
         }
      }
-     async getByID(id){
+     async getById(id){
         try{
             return await super.getOne('_id', id)
         }
