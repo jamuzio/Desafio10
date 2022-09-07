@@ -13,5 +13,11 @@ routerWeb.get('/logout', WebController.Logout)
 routerWeb.get('/registro', WebController.Registro)
 routerWeb.get('/failRegister', WebController.failRegister)
 routerWeb.get('/failLogin', WebController.failLogin)
+//Rutas Duplicadas con metodo post por redirect de passport
+routerWeb.post('/', UserHasSesion ,WebController.AddNewProd)
+routerWeb.post('/login', WebController.Login)
+routerWeb.post('/registro', WebController.Registro)
+routerWeb.post('/failRegister', WebController.failRegister)
+routerWeb.post('/failLogin', WebController.failLogin)
 
 export default routerWeb 

@@ -39,4 +39,5 @@ export default function OpenServer(PORT){
     httpServer.listen(PORT, () => {
     console.log(`Servidor escuchando al puerto ${PORT} desde el proceso ${process.pid}`)
 })
+return httpServer
 }

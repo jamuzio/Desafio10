@@ -54,7 +54,6 @@ class Class_Mongo {
 
     async update(updateData){
         const id = updateData._id
-        //delete updateData._id
         let resultado
         try{
             resultado = await this.coleccion.findOneAndUpdate({_id: id}, 
@@ -68,85 +67,6 @@ class Class_Mongo {
             throw error
         }
     }
-    /*
-    async getByName(dato, type){
-        let ElementoBuscado
-        try{
-            switch (type) {
-                case 'Usuario': 
-                    ElementoBuscado = await this.coleccion.findOne({EMAIL: `${dato}`})
-                    break
-                case 'Producto':
-                    ElementoBuscado = await this.coleccion.findOne({TITLE: `${dato}`})
-                    break
-                default:
-                    throw error_generator.UNKNOWN_TYPE(`Tipo ${type} desconocido`)
-            }
-            if (!ElementoBuscado) {
-                throw error_generator.NOT_FOUND()
-            }
-            return ElementoBuscado
-        }
-        catch(error){
-            if(error.tipo === 'NOT_FOUND' || error.tipo === 'UNKNOWN_TYPE'){
-                throw error
-            } else{
-                logger.info('No se pudo leer la base')
-                throw error
-            }
-          
-        }
-    }
-    async getByID(id){
-        try{
-            if(id.length != 24){
-                throw error_generator.MISSING_DATA('El id debe contener 24 caracteres')
-            }
-            const MongoID = ObjectId(id)
-            const ElementoBuscado = await this.coleccion.findOne({_id: MongoID})
-            if (!ElementoBuscado) {
-                throw error_generator.NOT_FOUND()
-            }
-            return ElementoBuscado
-        }
-        catch(error){
-            if(error.tipo === 'NOT_FOUND'){
-                throw error
-            } else{
-                logger.info('No se pudo leer la base')
-                logger.info(error)
-                throw error
-            }
-          
-        }
-    }*/
 }
 
 export default Class_Mongo
-
-function Getdate () {
-    const hoy = new Date();
-    const fecha = hoy.getDate() + '-' + ( hoy.getMonth() + 1 ) + '-' + hoy.getFullYear()
-    const hora = hoy.getHours() + ':' + hoy.getMinutes() + ':' + hoy.getSeconds();
-    return fecha + ' ' + hora
-}
-
-function AuthorChecker(datos){
-    if( emailRegex.test(datos.EMAIL) &&
-        datos.hasOwnProperty("EMAIL") &&
-        datos.hasOwnProperty("NOMBRE") &&
-        datos.hasOwnProperty("APELLIDO") &&
-        datos.hasOwnProperty("EDAD") &&
-        datos.hasOwnProperty("ALIAS") &&
-        datos.hasOwnProperty("AVATAR")
-        ) if (datos.hasOwnProperty("EMAIL") &&
-        datos.NOMBRE.length > 0 &&
-        datos.APELLIDO.length > 0 &&
-        datos.EDAD.length > 0 &&
-        datos.ALIAS.length > 0 &&
-        datos.AVATAR.length > 0
-        ) return true
-    else return false
-    }
-
-const emailRegex = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;

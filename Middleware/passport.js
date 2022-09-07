@@ -29,10 +29,8 @@ passport.use('login', new Strategy({
     async (username, password, done) => {
         try {
             const user = await usuario.autenticar(username, password)
-            console.log(user)
             done(null, user)
         } catch (error) {
-            console.log(error)
             done(null, false)
         }
     }))
@@ -42,7 +40,7 @@ export const passportMiddleware = passport.initialize()
 // opcional =====================================================
 
 passport.serializeUser((user, done) => {
-    console.log(user)
+    //console.log(user)
     done(null, user._id)
 })
 

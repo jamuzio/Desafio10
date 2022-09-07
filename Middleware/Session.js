@@ -6,18 +6,31 @@ const SECRETWORD = process.env.SECRETWORD
 
 const advancedOptions = { useNewUrlParser: true, useUnifiedTopology: true }
 
-const session = expressSession({
-    store: MongoStore.create({
-        mongoUrl: MONGOATLAS,
-        mongoOptions: advancedOptions
-    }),
-
-    secret: SECRETWORD,
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-        maxAge: 600000
-    }
-})
+let session
+switch(process.env.MODO_PERSISTENCIA){
+    case'mongodb':
+        session = expressSession({
+                store: MongoStore.create({
+                    mongoUrl: MONGOATLAS,
+                    mongoOptions: advancedOptions
+                }),
+                secret: SECRETWORD,
+                resave: false,
+                saveUninitialized: false,
+                cookie: {
+                    maxAge: 600000
+                }
+        })
+        break
+    default:
+        session = expressSession({
+                secret: SECRETWORD,
+                resave: false,
+                saveUninitialized: false,
+                cookie: {
+                    maxAge: 600000
+                }
+    })
+}
 
 export default session

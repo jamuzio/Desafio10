@@ -1,20 +1,16 @@
-import Class_Mongo from "../../Class/Class_Mongo.js"
+import Class_MEM from "../../Class/Class_MEM.js"
 import error_generator from "../../Tools/Error_Generator.js"
 import User from "../../Models/User.js"
 import generateID from "../../Tools/ID_gen.js"
 
-class UsuarioDaoMongoDb extends Class_Mongo {
-
-    constructor() {
-        super('Usuarios')
-    }
-    async save(datos){
+class UsuarioDaoMem extends Class_MEM {
+    save(datos){
         try{
-            const usuarioBuscado = await this.coleccion.find({EMAIL: `${datos.EMAIL}`}).toArray()
-            if (usuarioBuscado.length === 0){
+            const usuarioBuscado = this.Objects.find( u => u.EMAIL == datos.EMAIL)
+            if (!usuarioBuscado){
                 const ID = generateID()
                 const usuario = new User({id:ID, email:datos.EMAIL, pwd:datos.PWD})
-                await super.save(usuario.datosCompletos())
+                super.save(usuario.datosCompletos())
                 return usuario.datos()
             } else {
                 throw error_generator.DUPLICATED_USER()
@@ -25,18 +21,18 @@ class UsuarioDaoMongoDb extends Class_Mongo {
         }
      }
 
-    async deleteById(id){
-        await super.cleanById(id)
+    deleteById(id){
+        super.cleanById(id)
      }
 
-    async update(id, datos){
+    update(id, datos){
         throw error_generator.NOT_IMPLEMENTED('Metodo update no implemntado para UsuariosMongo')
      }
 
-    async autenticar(username, password) {
+    autenticar(username, password) {
         let usuarioBuscado
         try {
-            usuarioBuscado = await this.getByName(username)
+            usuarioBuscado = this.getByName(username)
             if(usuarioBuscado.authenticate(password)){
                 return usuarioBuscado.datos()
             } else{
@@ -51,19 +47,19 @@ class UsuarioDaoMongoDb extends Class_Mongo {
         }
     }
 
-    async getByName(email){
-        let usuarioBuscado = await super.getOne('EMAIL', email)
+    getByName(email){
+        let usuarioBuscado = super.getOne('EMAIL', email)
         //console.log(usuarioBuscado)
         const usuario = new User({id:usuarioBuscado._id, email: usuarioBuscado.EMAIL, pwd:usuarioBuscado.PWD}) 
         return usuario
     }
 
-    async getByID(id){
-        let usuarioBuscado = await super.getOne('_id', id)
+    getByID(id){
+        let usuarioBuscado = super.getOne('_id', id)
         //console.log(usuarioBuscado)
         const usuario = new User({id:usuarioBuscado._id, email: usuarioBuscado.EMAIL, pwd:usuarioBuscado.PWD}) 
         return usuario
     }
 }
 
-export default UsuarioDaoMongoDb
+export default UsuarioDaoMem

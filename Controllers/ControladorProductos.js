@@ -34,6 +34,7 @@ const ControladorProductos = {
     UpdateProd: async (req, res, next) => {
         const id = req.params.id
         const UpdateData = req.body
+        
         try {
             const updatedProd = await Productos.UpdateProd(id, UpdateData);
             res.status(202).json(updatedProd)
@@ -47,7 +48,7 @@ const ControladorProductos = {
         const id = req.params.id
         try {
             await Productos.deleteById(id);
-            res.status(202).send('Producto Eliminado con exito')
+            res.status(204).send('Producto Eliminado con exito')
             logger.info(`Se elimino el producto id: ${id}`)
         } catch (error) {
             next(error)
