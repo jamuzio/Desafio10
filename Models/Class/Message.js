@@ -1,4 +1,4 @@
-import error_generator from "../Tools/Error_Generator.js"
+import error_generator from "../../Tools/Error_Generator.js"
 
 export default class Message {
     #id

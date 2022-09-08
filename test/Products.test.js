@@ -2,19 +2,19 @@ import {chaiWhitServer, chai} from "./index.js";
 
 const ProductsToAdd=[
     {
-        TITLE: "TestProd1",
-        PRICE: 12345,
-        THUMBNAIL: "http:\\testProd1"
+        "TITLE": "TestProd1",
+        "PRICE": 12345,
+        "THUMBNAIL": "http:\\testProd1"
     },
     {
-        TITLE: "TestProd2",
-        PRICE: 12345,
-        THUMBNAIL: "http:\\testProd2"
+        "TITLE": "TestProd2",
+        "PRICE": 12345,
+        "THUMBNAIL": "http:\\testProd2"
     },
     {
-        TITLE: "TestProd3",
-        PRICE: 12345,
-        THUMBNAIL: "http:\\testProd3"
+        "TITLE": "TestProd3",
+        "PRICE": 12345,
+        "THUMBNAIL": "http:\\testProd3"
     }
 ]
 

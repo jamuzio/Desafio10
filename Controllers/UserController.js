@@ -17,7 +17,10 @@ const UserController = {
     loginController: passport.authenticate('login', {
         successRedirect: '/',
         failureRedirect: '/failLogin',
-    })
+    }),
+    deleteUser: (req, res, next) => {
+        res.status(404).redirect('/')
+    }
 
 }
 

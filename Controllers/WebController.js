@@ -1,4 +1,4 @@
-import { ProductosDao as Productos } from "../DAOs/Productos/index.js"
+import { ProductosDao as Productos } from "../Models/DAOs/Productos/index.js"
 import { faker } from '@faker-js/faker'
 faker.locale = 'es'
 const { commerce, image } = faker

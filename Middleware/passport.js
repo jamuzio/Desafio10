@@ -1,6 +1,6 @@
 import passport from 'passport'
 import { Strategy } from 'passport-local'
-import { UsuarioDao as usuario } from '../DAOs/Usuarios/index.js'
+import { UsuarioDao as usuario } from '../Models/DAOs/Usuarios/index.js'
 
 
 passport.use('registro', new Strategy({

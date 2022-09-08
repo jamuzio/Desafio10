@@ -1,5 +1,5 @@
 import { FunctionsProductCtrl } from './ControladorProductos.js'
-import { MensajesDao as Mensajes } from '../DAOs/Mensajes/index.js'
+import { MensajesDao as Mensajes } from '../Models/DAOs/Mensajes/index.js'
 import { normalize, denormalize, schema } from 'normalizr'
 import logger from '../Tools/logger.js'
 

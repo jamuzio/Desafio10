@@ -1,6 +1,6 @@
-import Class_MEM from "../../Class/Class_MEM.js"
-import Message from "../../Models/Message.js"
-import generateID from "../../Tools/ID_gen.js"
+import Class_MEM from "../../DB/Class_MEM.js"
+import Message from "../../Class/Message.js"
+import generateID from "../../../Tools/ID_gen.js"
 
 class MensajesDaoMem extends Class_MEM {
     save(datos){

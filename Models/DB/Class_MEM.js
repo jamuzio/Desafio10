@@ -1,4 +1,4 @@
-import error_generator from "../Tools/Error_Generator.js"
+import error_generator from "../../Tools/Error_Generator.js"
 
 
 class Class_MEM {
@@ -15,6 +15,7 @@ class Class_MEM {
         if(indiceBuscado === -1){
             throw error_generator.NOT_FOUND()
         } else {
+            console.log(this.Objects[indiceBuscado])
             this.Objects.splice(indiceBuscado,1)  
         }
     }

@@ -1,6 +1,6 @@
-import Class_Mongo from "../../Class/Class_Mongo.js"
-import Message from "../../Models/Message.js"
-import generateID from "../../Tools/ID_gen.js"
+import Class_Mongo from "../../DB/Class_Mongo.js"
+import Message from "../../Class/Message.js"
+import generateID from "../../../Tools/ID_gen.js"
 
 class MensajesDaoMongoDb extends Class_Mongo {
 

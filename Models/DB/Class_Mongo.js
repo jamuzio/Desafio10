@@ -1,5 +1,5 @@
-import dbDesafio9 from "../DataBase/MongoServer.js"
-import error_generator from "../Tools/Error_Generator.js"
+import dbDesafio9 from "../../DataBase/MongoServer.js"
+import error_generator from "../../Tools/Error_Generator.js"
 
 
 class Class_Mongo {
@@ -61,6 +61,7 @@ class Class_Mongo {
             if(!resultado){
                 throw error_generator.NOT_FOUND(`El elemento con id ${id} no fue encotrado`)
             }
+            console.log(resultado.value)
             return resultado.value
         }
         catch(error){
