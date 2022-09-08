@@ -1,7 +1,9 @@
 import passport from 'passport'
 import { Strategy } from 'passport-local'
-import { UsuarioDao as usuario } from '../Models/DAOs/Usuarios/index.js'
+import UsuariosAPI from '../APIs/API_Usuarios.js'
+//import { UsuarioDao as usuario } from '../Models/DAOs/Usuarios/index.js'
 
+const usuario = new UsuariosAPI
 
 passport.use('registro', new Strategy({
     passReqToCallback: true,
@@ -11,14 +13,10 @@ passport.use('registro', new Strategy({
     async (req, username, password, done) => {
         try {
             const datosUsuario = req.body
-            const user = await usuario.save(datosUsuario)
+            const user = await usuario.createNewUser(datosUsuario)
             done(null, user)
         } catch (error) {
-            if (error.tipo === 'DUPLICATED_USER' || error.tipo === 'MISSING_DATA' ){
-                done(null, false)
-            } else{
-                done(error)
-            }
+            done(error)
         }
     }))
 
@@ -46,8 +44,7 @@ passport.serializeUser((user, done) => {
 
 passport.deserializeUser( async (ID, done) => {
     try {
-        const usuarioBuscado = await usuario.getByID(ID)
-        const user = usuarioBuscado.datos()
+        const user = await usuario.getUserByID(ID)
         done(null, user)
     } catch (error) {
         done(error)

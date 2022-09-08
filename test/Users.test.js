@@ -1,7 +1,9 @@
 import {chaiWhitServer, chai} from "./index.js"
 
+const Email = `Test${Date.now()}@test.com`
+
 const testUser= {
-       "EMAIL": "test@test.com",
+       "EMAIL": Email,
         "PWD": "12345"
     }
 const UserNoPWD= {
