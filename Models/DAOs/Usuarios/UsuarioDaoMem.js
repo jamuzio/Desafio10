@@ -47,6 +47,14 @@ class UsuarioDaoMem extends Class_MEM {
         }
     }
 
+    UserExist(datos){
+        const productoBuscado = this.Objects.find(p => p.EMAIL == datos.EMAIL)
+        if (!productoBuscado){
+            return false
+        } else{
+            return true
+        }
+    }
     getByName(email){
         let usuarioBuscado = super.getOne('EMAIL', email)
         //console.log(usuarioBuscado)

@@ -6,10 +6,12 @@ import routerRandom from './routerRandom.js'
 import InfoRouter from './infoRouter.js'
 import Routes_logger from '../Middleware/Routes_logger.js'
 import logger from '../Tools/logger.js'
+import { graphqlMiddleware } from '../Middleware/graphqlMiddleware.js'
 
 
 const Server_Router = express()
 
+Server_Router.use('/graphql', graphqlMiddleware)
 Server_Router.use('/api/productos', Routes_logger, routerProductos)
 Server_Router.use('/api/session', Routes_logger, routerSession)
 Server_Router.use('/api/randoms', Routes_logger, routerRandom)

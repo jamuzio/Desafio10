@@ -59,4 +59,6 @@ class UsuariosAPI {
     }
 }
 
-export default UsuariosAPI
+const API_usuario = new UsuariosAPI
+
+export default API_usuario

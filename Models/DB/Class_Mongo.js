@@ -37,6 +37,7 @@ class Class_Mongo {
             if(!resultado.value){
                 throw error_generator.NOT_FOUND(`El elemento con id ${id} no fue encotrado`)
             }
+            return true
         }
         catch(error){
             throw error
@@ -61,7 +62,6 @@ class Class_Mongo {
             if(!resultado){
                 throw error_generator.NOT_FOUND(`El elemento con id ${id} no fue encotrado`)
             }
-            console.log(resultado.value)
             return resultado.value
         }
         catch(error){

@@ -40,7 +40,7 @@ class ProductosApi {
      }
      async deleteProdById(id){
         try{
-            await this.productos.deleteById(id)
+            return await this.productos.deleteById(id)
         }
         catch(error){
             throw error
@@ -62,4 +62,6 @@ class ProductosApi {
      }
 }
 
-export default ProductosApi
+const Api_Prod = new ProductosApi
+
+export default Api_Prod

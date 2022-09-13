@@ -32,7 +32,7 @@ class ProductosDaoMongoDb extends Class_Mongo {
      }
      async deleteById(id){
         try{
-            await super.cleanById(id)
+            return await super.cleanById(id)
         }
         catch(error){
             throw error

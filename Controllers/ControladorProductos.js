@@ -1,8 +1,7 @@
 //import { ProductosDao as Productos } from "../Models/DAOs/Productos/index.js"
 import logger from "../Tools/logger.js"
-import ProductosApi from "../APIs/API_Productos.js"
+import Api_Prod from "../APIs/API_Productos.js"
 
-const Api_Prod = new ProductosApi
 
 const ControladorProductos = {
     AllProd: async (req, res, next) => {

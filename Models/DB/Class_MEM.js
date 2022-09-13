@@ -7,7 +7,8 @@ class Class_MEM {
         
     }
     save(NewElement){
-        this.Objects.push(NewElement)
+        let obj = Object.create(NewElement)
+        this.Objects.push(obj)
         return NewElement
     }
     cleanById(id){
@@ -42,7 +43,8 @@ class Class_MEM {
             throw error_generator.NOT_FOUND(`El objeto con id ${id} no fue encotrado`)
         } else {
             this.Objects.splice(indiceBuscado,1)
-            this.Objects.push(updateData)
+            let obj = Object.create(updateData)
+            this.Objects.push(obj)
             return updateData
         }
     }
